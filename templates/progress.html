@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Progress - Stride{% endblock %}
+
+{% block head %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+
+    <!-- Top Label -->
+    <div>
+        <h2 class="text-sm font-normal text-gray-800">Percentage of attendance</h2>
+    </div>
+
+    <!-- Chart Container matching progress.png -->
+    <div class="bg-white rounded-3xl p-8 border border-gray-100 relative shadow-sm">
+        <div class="h-96 w-full relative">
+            <canvas id="progressChart"></canvas>
+        </div>
+        <span class="absolute bottom-4 right-8 text-xs font-normal text-gray-800">Months</span>
+    </div>
+
+    <!-- Bottom Metric Cards Grid matching progress.png -->
+    <div class="space-y-4">
+        <!-- Present Card -->
+        <div class="bg-[#EBEBEB] rounded-2xl p-6 flex items-center justify-between">
+            <span class="text-sm font-normal text-gray-900">Present</span>
+            <span id="metric-present" class="text-sm font-normal text-gray-900">80%</span>
+        </div>
+
+        <!-- Absent Card -->
+        <div class="bg-[#EBEBEB] rounded-2xl p-6 flex items-center justify-between">
+            <span class="text-sm font-normal text-gray-900">Absent</span>
+            <span id="metric-absent" class="text-sm font-normal text-gray-900">10%</span>
+        </div>
+
+        <!-- Half Days Card -->
+        <div class="bg-[#EBEBEB] rounded-2xl p-6 flex items-center justify-between">
+            <span class="text-sm font-normal text-gray-900">Half days</span>
+            <span id="metric-halfday" class="text-sm font-normal text-gray-900">10%</span>
+        </div>
+
+        <!-- Overall Performance Card -->
+        <div class="bg-[#EBEBEB] rounded-2xl p-6 flex items-center justify-between">
+            <span class="text-sm font-normal text-gray-900">Overall Performance</span>
+            <span id="metric-overall" class="text-sm font-normal text-gray-900">85%</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+{% endblock %}

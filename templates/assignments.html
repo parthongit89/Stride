@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Assignments - Stride{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-8 min-h-[70vh] flex flex-col justify-between">
+
+    <!-- Assignments List Feed matching assignment.png -->
+    <div id="assignments-feed" class="space-y-4 pt-8">
+        <!-- Rendered dynamically by JS -->
+    </div>
+
+    <!-- Centered Bottom Dark Square FAB Button (+) -->
+    <div class="flex justify-center pb-8">
+        <button onclick="openAddAssignmentModal()" class="fab-dark-square flex items-center justify-center shadow-xl" data-tooltip="Add Assignment">
+            <i class="fa-solid fa-plus text-3xl"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Modal: Add Assignment -->
+<div id="modal-add-assignment" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl relative">
+        <button onclick="closeModal('modal-add-assignment')" class="absolute top-6 right-6 text-gray-400 hover:text-black">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <h3 class="text-xl font-bold text-gray-900 mb-6">New Assignment</h3>
+
+        <form id="form-add-assignment" onsubmit="handleAddAssignmentSubmit(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Assignment Title</label>
+                <input type="text" id="ass-title" required placeholder="e.g. Physics Assignment" class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Target Date</label>
+                <input type="date" id="ass-date" required class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-[#2B2D32] hover:bg-black text-white text-sm font-semibold rounded-2xl transition-colors mt-4">
+                Add Assignment
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/assignments.js') }}"></script>
+{% endblock %}

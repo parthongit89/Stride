@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance - Stride{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+
+    <!-- Container 1: Weekly View Card matching Figma -->
+    <div class="relative pt-6">
+        <!-- Floating Centered Black Pill 'Week X' -->
+        <div class="absolute -top-1 left-1/2 -translate-x-1/2 bg-[#2B2D32] text-white font-medium text-sm px-7 py-2 rounded-full shadow-md z-10 flex items-center gap-2">
+            <span id="week-pill-label">Week 1</span>
+        </div>
+
+        <div class="figma-container relative flex items-center justify-between gap-4">
+            <!-- Left Navigation Arrow -->
+            <button id="btn-prev-week" class="text-3xl text-gray-500 hover:text-black transition-colors p-2 focus:outline-none" title="Previous Week">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="w-full space-y-6">
+                <!-- Top Controls Row inside Weekly Card -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Dynamic Month Badge -->
+                        <span id="month-badge" class="bg-[#2B2D32] text-white text-xs font-semibold px-5 py-2 rounded-full cursor-pointer" title="Click to change month">
+                            --
+                        </span>
+
+                        <span class="bg-[#D4F5E5] border border-[#90E8B2] text-[#1A4D2E] text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-2">
+                            Present <span id="week-count-present" class="font-bold">0</span>
+                        </span>
+                        <span class="bg-[#FFD4D6] border border-[#FFA2A6] text-[#641E1E] text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-2">
+                            Absent <span id="week-count-absent" class="font-bold">0</span>
+                        </span>
+                        <span class="bg-[#DDE0FF] border border-[#B2B8FF] text-[#2D3178] text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-2">
+                            Holidays <span id="week-count-holiday" class="font-bold">0</span>
+                        </span>
+                        <span class="bg-[#E8D8CD] border border-[#D3BCAD] text-[#4A3A2F] text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-2">
+                            Half day <span id="week-count-halfday" class="font-bold">0</span>
+                        </span>
+                    </div>
+
+                    <!-- Right Black Pill Icon -->
+                    <div class="bg-[#2B2D32] text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-sm"></i>
+                        <span id="week-streak-num">0</span>
+                    </div>
+                </div>
+
+                <!-- Weekly Carousel Day Cards -->
+                <div id="weekly-days-row" class="grid grid-cols-7 sm:grid-cols-11 gap-3 py-2">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Right Navigation Arrow -->
+            <button id="btn-next-week" class="text-3xl text-gray-500 hover:text-black transition-colors p-2 focus:outline-none" title="Next Week">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Container 2: Monthly Grid & Monthly Strikes matching Figma -->
+    <div class="figma-container space-y-8">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Summary Pills & Calendar Grid -->
+            <div class="lg:col-span-8 space-y-6">
+
+                <!-- 2x2 Summary Pills Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-[#DDDDDD] rounded-2xl p-4 flex items-center justify-between text-sm font-semibold text-gray-800">
+                        <span>Present days</span>
+                        <span id="monthly-count-present" class="font-bold text-base">0</span>
+                    </div>
+                    <div class="bg-[#DDDDDD] rounded-2xl p-4 flex items-center justify-between text-sm font-semibold text-gray-800">
+                        <span>Holidays</span>
+                        <span id="monthly-count-holiday" class="font-bold text-base">0</span>
+                    </div>
+                    <div class="bg-[#DDDDDD] rounded-2xl p-4 flex items-center justify-between text-sm font-semibold text-gray-800">
+                        <span>Absent days</span>
+                        <span id="monthly-count-absent" class="font-bold text-base">0</span>
+                    </div>
+                    <div class="bg-[#DDDDDD] rounded-2xl p-4 flex items-center justify-between text-sm font-semibold text-gray-800">
+                        <span>Half days</span>
+                        <span id="monthly-count-halfday" class="font-bold text-base">0</span>
+                    </div>
+                </div>
+
+                <!-- 7x5 Monthly Days Grid -->
+                <div id="monthly-days-grid" class="grid grid-cols-7 gap-3 pt-2">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Right Side: Month Header Card & Monthly Strikes Card -->
+            <div class="lg:col-span-4 flex flex-col justify-between gap-6">
+
+                <!-- Month Header Card with Month Selector Controls -->
+                <div class="bg-[#DDDDDD] rounded-3xl p-6 text-center flex items-center justify-between min-h-[120px]">
+                    <button id="btn-prev-month" class="text-2xl text-gray-600 hover:text-black transition-colors p-2" title="Previous Month">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div>
+                        <h2 id="monthly-header-title" class="text-3xl font-normal text-gray-900 tracking-tight">--</h2>
+                        <span id="monthly-header-year" class="text-xs text-gray-500 font-medium">--</span>
+                    </div>
+                    <button id="btn-next-month" class="text-2xl text-gray-600 hover:text-black transition-colors p-2" title="Next Month">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Monthly Strikes / Selected Date Card -->
+                <div class="bg-[#DDDDDD] rounded-3xl p-8 text-center flex flex-col items-center justify-between flex-grow min-h-[260px]">
+                    <span id="strikes-card-label" class="text-sm font-medium text-gray-600">Monthly strikes</span>
+                    <h1 id="strikes-card-num" class="text-7xl font-normal text-gray-900 my-4">0</h1>
+                    <div class="text-gray-800">
+                        <i class="fa-solid fa-chart-simple text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Action Controls Row -->
+        <div class="pt-4 border-t border-gray-300/60 flex flex-col sm:flex-row items-center gap-6 justify-between">
+            
+            <!-- 3 Dark Circular Buttons -->
+            <div class="flex items-center gap-4">
+                <button onclick="quickMarkStatus('present')" class="btn-circle-dark figma-tooltip">
+                    <i class="fa-solid fa-check"></i>
+                    <span class="tooltip-text">Present<br><small class="text-gray-400 font-normal">Current Day</small></span>
+                </button>
+                <button onclick="quickMarkStatus('absent')" class="btn-circle-dark figma-tooltip">
+                    <i class="fa-solid fa-ban"></i>
+                    <span class="tooltip-text">Absent<br><small class="text-gray-400 font-normal">Current Day</small></span>
+                </button>
+                <button onclick="quickMarkStatus('half_day')" class="btn-circle-dark figma-tooltip">
+                    <i class="fa-solid fa-minus"></i>
+                    <span class="tooltip-text">Half Day</span>
+                </button>
+            </div>
+
+            <!-- Date Schedule Input Bar (Populated dynamically in real-time) -->
+            <div class="flex-grow w-full sm:w-auto relative">
+                <div id="schedule-date-tag" class="text-[11px] text-gray-500 font-medium ml-4 mb-1"></div>
+                <div class="flex items-center gap-3">
+                    <input type="text" id="schedule-input-note" placeholder="Set Schedule" class="w-full bg-[#DDDDDD] border border-gray-300/80 rounded-2xl px-5 py-3.5 text-sm text-gray-800 outline-none focus:bg-white transition-colors">
+                    <button onclick="saveScheduleNote()" class="text-sm font-semibold text-gray-700 hover:text-black px-4 py-2">Done</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
+{% endblock %}

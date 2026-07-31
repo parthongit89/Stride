@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses - Stride{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <!-- Top Summary Cards & Quick Add Dark Button Row -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        
+        <!-- Income Card -->
+        <div class="md:col-span-5 figma-card-white p-7 flex items-center justify-between">
+            <span class="text-2xl font-normal text-gray-900">Income</span>
+            <span id="header-income-val" class="text-2xl font-normal text-gray-900">₹0.00</span>
+        </div>
+
+        <!-- Expense Card -->
+        <div class="md:col-span-5 figma-card-white p-7 flex items-center justify-between">
+            <span class="text-2xl font-normal text-gray-900">Expense</span>
+            <span id="header-expense-val" class="text-2xl font-normal text-rose-500">₹ -0.00</span>
+        </div>
+
+        <!-- Large Dark Square Add Button -->
+        <div class="md:col-span-2 flex justify-end">
+            <button onclick="openAddTransactionModal()" class="fab-dark-square w-full md:w-20 h-20 flex items-center justify-center shadow-lg" data-tooltip="Add Transaction">
+                <i class="fa-solid fa-plus text-3xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Middle Section: Bank Accounts Card & Cash Card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Left Card: Bank Accounts -->
+        <div class="figma-container relative p-8 flex flex-col justify-between min-h-[240px]">
+            <div class="flex items-center justify-between mb-6">
+                <span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Bank Accounts</span>
+                <button onclick="togglePrivacy()" class="text-gray-600 hover:text-black transition-colors p-1">
+                    <i id="eye-icon-bank" class="fa-solid fa-eye text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Accounts Rows -->
+            <div id="bank-accounts-list" class="space-y-4">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
+        <!-- Right Card: Cash -->
+        <div class="figma-container relative p-8 flex flex-col justify-between min-h-[240px]">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Cash</span>
+                <button onclick="togglePrivacy()" class="text-gray-600 hover:text-black transition-colors p-1">
+                    <i id="eye-icon-cash" class="fa-solid fa-eye text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Large Centered Cash Balance -->
+            <div class="my-auto text-center py-6">
+                <h1 id="cash-balance-val" class="text-5xl font-normal text-gray-900 tracking-tight">₹ 0.00</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section: Transactions Ledger -->
+    <div class="space-y-6 pt-4">
+        <div>
+            <h2 class="text-lg font-normal text-gray-900">Transactions</h2>
+            <hr class="border-gray-300 mt-2">
+        </div>
+
+        <div id="transactions-cards-feed" class="space-y-4">
+            <!-- Transaction Rows rendered by JS -->
+        </div>
+
+        <!-- Report Download Link -->
+        <div class="text-right pt-2">
+            <button onclick="downloadMonthlyReport()" class="text-xs font-semibold text-gray-600 hover:text-black underline">
+                Export Transaction Report (.CSV)
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Transaction -->
+<div id="modal-add-transaction" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl relative">
+        <button onclick="closeModal('modal-add-transaction')" class="absolute top-6 right-6 text-gray-400 hover:text-black">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <h3 class="text-xl font-bold text-gray-900 mb-6">New Transaction</h3>
+
+        <form id="form-add-transaction" onsubmit="handleAddTransactionSubmit(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Transaction Type</label>
+                <select id="t-type" class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+                    <option value="income">Income add</option>
+                    <option value="expense">Expense</option>
+                    <option value="withdrawal">Withdrawal</option>
+                    <option value="deposit">Deposit</option>
+                    <option value="transfer">Transfer</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Amount (₹)</label>
+                <input type="number" step="0.01" min="0.01" id="t-amount" required placeholder="0.00" class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Account</label>
+                <select id="t-account" class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Reason / Note</label>
+                <input type="text" id="t-reason" placeholder="e.g. Glocery, Books, Cash" class="w-full p-3 bg-gray-100 rounded-xl text-sm outline-none">
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-[#2B2D32] hover:bg-black text-white text-sm font-semibold rounded-2xl transition-colors mt-4">
+                Record Transaction
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/expenses.js') }}"></script>
+{% endblock %}
