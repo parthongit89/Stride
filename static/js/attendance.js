@@ -108,10 +108,11 @@ function updateCounters(c) {
     document.getElementById('monthly-count-holiday').innerText = c.holiday || 0;
     document.getElementById('monthly-count-halfday').innerText = c.half_day || 0;
 
-    document.getElementById('week-count-present').innerText = Math.min(c.present || 0, 7);
-    document.getElementById('week-count-absent').innerText = Math.min(c.absent || 0, 7);
-    document.getElementById('week-count-holiday').innerText = Math.min(c.holiday || 0, 7);
-    document.getElementById('week-count-halfday').innerText = Math.min(c.half_day || 0, 7);
+    // Display true total monthly counts in top pill bar matching cards
+    document.getElementById('week-count-present').innerText = c.present || 0;
+    document.getElementById('week-count-absent').innerText = c.absent || 0;
+    document.getElementById('week-count-holiday').innerText = c.holiday || 0;
+    document.getElementById('week-count-halfday').innerText = c.half_day || 0;
 
     document.getElementById('week-streak-num').innerText = c.streak || 0;
     document.getElementById('strikes-card-num').innerText = c.streak || 0;
