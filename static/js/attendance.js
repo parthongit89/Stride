@@ -117,6 +117,18 @@ function updateCounters(c) {
     document.getElementById('strikes-card-num').innerText = c.streak || 0;
 }
 
+function getItemStatus(dateStr, year, month, day) {
+    const record = recordsData[dateStr];
+    if (record) return record.status;
+    
+    // Check if Sunday (0 in JS)
+    const dayOfWeek = new Date(year, month - 1, day).getDay();
+    if (dayOfWeek === 0) {
+        return 'holiday';
+    }
+    return 'unrecorded';
+}
+
 function renderWeeklyDays() {
     const container = document.getElementById('weekly-days-row');
     container.innerHTML = '';
@@ -132,8 +144,7 @@ function renderWeeklyDays() {
         const d = String(day).padStart(2, '0');
         const dateStr = `${currentYear}-${m}-${d}`;
 
-        const record = recordsData[dateStr];
-        const status = record ? record.status : 'unrecorded';
+        const status = getItemStatus(dateStr, currentYear, currentMonth, day);
 
         const btn = document.createElement('button');
         btn.className = `h-14 rounded-2xl font-bold text-sm flex flex-col items-center justify-center relative transition-transform hover:scale-105 ${getDayClass(status)}`;
@@ -159,8 +170,7 @@ function renderMonthlyDaysGrid() {
         const d = String(day).padStart(2, '0');
         const dateStr = `${currentYear}-${m}-${d}`;
 
-        const record = recordsData[dateStr];
-        const status = record ? record.status : 'unrecorded';
+        const status = getItemStatus(dateStr, currentYear, currentMonth, day);
 
         const box = document.createElement('div');
         box.className = `day-box ${getDayClass(status)} ${selectedDateStr === dateStr ? 'ring-2 ring-black font-extrabold scale-105' : ''}`;
@@ -213,13 +223,17 @@ function updateSelectedDateView(dateStr) {
     const labelEl = document.getElementById('strikes-card-label');
     const numEl = document.getElementById('strikes-card-num');
 
+    // Check if Sunday
+    const dayOfWeek = new Date(currentYear, m - 1, dayNum).getDay();
+    const isSunday = dayOfWeek === 0;
+
     if (record) {
         noteInput.value = record.schedule_note || '';
-        labelEl.innerText = record.schedule_note ? record.schedule_note : 'No Schedule added';
+        labelEl.innerText = record.schedule_note ? record.schedule_note : (isSunday ? 'Sunday Holiday' : 'No Schedule added');
         numEl.innerText = dayNum;
     } else {
-        noteInput.value = '';
-        labelEl.innerText = 'No Schedule added';
+        noteInput.value = isSunday ? 'Sunday Holiday' : '';
+        labelEl.innerText = isSunday ? 'Sunday Holiday' : 'No Schedule added';
         numEl.innerText = dayNum;
     }
 }
