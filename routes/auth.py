@@ -39,6 +39,8 @@ def register():
         db.session.add_all([acc1, acc2, acc3, acc4, acc5])
         db.session.commit()
 
+        # Set 90-day permanent session
+        session.permanent = True
         session['user_id'] = user.id
         session['username'] = user.username
         
@@ -62,6 +64,8 @@ def login():
             flash('Invalid username/email or password.', 'error')
             return render_template('auth/login.html', mode='login')
 
+        # Set 90-day permanent session
+        session.permanent = True
         session['user_id'] = user.id
         session['username'] = user.username
 
@@ -102,6 +106,8 @@ def firebase_login():
         db.session.add_all([acc1, acc2, acc3, acc4, acc5])
         db.session.commit()
 
+    # Set 90-day permanent session
+    session.permanent = True
     session['user_id'] = user.id
     session['username'] = user.username
 

@@ -2,6 +2,7 @@ import os
 from flask import Flask, redirect, url_for, session
 from dotenv import load_dotenv
 from models import db
+from datetime import timedelta
 
 load_dotenv()
 
@@ -17,6 +18,9 @@ def create_app():
         
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Configure permanent session lifetime for 90 days
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=90)
 
     db.init_app(app)
 
