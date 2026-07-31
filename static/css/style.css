@@ -272,3 +272,49 @@ input:focus, select:focus, button:focus-visible {
     outline: 2px solid #0F172A;
     outline-offset: 2px;
 }
+
+/* Flatpickr Modern Figma Styling */
+.flatpickr-calendar {
+    border-radius: 24px !important;
+    box-shadow: 0 20px 40px -4px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.9) !important;
+    border: none !important;
+    font-family: var(--font-sans) !important;
+    padding: 12px !important;
+    background: #FFFFFF !important;
+}
+.flatpickr-months {
+    background: transparent !important;
+    padding: 4px 0 !important;
+}
+.flatpickr-month {
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    fill: #0F172A !important;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    font-weight: 700 !important;
+}
+.flatpickr-weekday {
+    color: #94A3B8 !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+}
+.flatpickr-day {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    color: #0F172A !important;
+    transition: all 0.15s ease !important;
+}
+.flatpickr-day:hover {
+    background: #F1F5F9 !important;
+}
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+    background: #0F172A !important;
+    border-color: #0F172A !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25) !important;
+}
+.flatpickr-day.today {
+    border-color: #0F172A !important;
+}
