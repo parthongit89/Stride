@@ -18,6 +18,12 @@ def create_app():
         
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Engine options for Neon serverless connection stability
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
 
     # Configure permanent session lifetime for 90 days
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=90)
@@ -44,7 +50,10 @@ def create_app():
         return redirect(url_for('auth.login'))
 
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print("DB init note:", e)
 
     return app
 
