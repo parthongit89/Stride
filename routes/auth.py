@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
-from models import db, User
+from models import db, User, BankAccount
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -27,6 +27,16 @@ def register():
         user = User(username=username, email=email)
         user.set_password(password)
         db.session.add(user)
+        db.session.commit()
+
+        # Seed default bank accounts for new user
+        acc1 = BankAccount(user_id=user.id, account_name='Union Bank of India', balance=0.00, is_cash=False)
+        acc2 = BankAccount(user_id=user.id, account_name='Indian Post Bank', balance=0.00, is_cash=False)
+        acc3 = BankAccount(user_id=user.id, account_name='Fam pay', balance=0.00, is_cash=False)
+        acc4 = BankAccount(user_id=user.id, account_name='Maharastra Bank', balance=0.00, is_cash=False)
+        acc5 = BankAccount(user_id=user.id, account_name='Cash', balance=0.00, is_cash=True)
+
+        db.session.add_all([acc1, acc2, acc3, acc4, acc5])
         db.session.commit()
 
         session['user_id'] = user.id
@@ -60,6 +70,42 @@ def login():
         return redirect(url_for('attendance.attendance_view'))
 
     return render_template('auth/login.html', mode='login')
+
+@auth_bp.route('/firebase-login', methods=['POST'])
+def firebase_login():
+    data = request.get_json(silent=True) or {}
+    email = data.get('email', '').strip()
+    name = data.get('name', '').strip()
+    uid = data.get('uid', '').strip()
+
+    if not email:
+        return jsonify({'success': False, 'message': 'Email missing from Firebase authentication.'}), 400
+
+    username = name if name else email.split('@')[0]
+    
+    # Find existing user by email or username
+    user = User.query.filter((User.email == email) | (User.username == username)).first()
+    if not user:
+        # Create new user for Firebase Google login
+        user = User(username=username, email=email)
+        user.set_password(f"firebase_{uid[:12]}")
+        db.session.add(user)
+        db.session.commit()
+
+        # Seed default bank accounts for the new user
+        acc1 = BankAccount(user_id=user.id, account_name='Union Bank of India', balance=0.00, is_cash=False)
+        acc2 = BankAccount(user_id=user.id, account_name='Indian Post Bank', balance=0.00, is_cash=False)
+        acc3 = BankAccount(user_id=user.id, account_name='Fam pay', balance=0.00, is_cash=False)
+        acc4 = BankAccount(user_id=user.id, account_name='Maharastra Bank', balance=0.00, is_cash=False)
+        acc5 = BankAccount(user_id=user.id, account_name='Cash', balance=0.00, is_cash=True)
+
+        db.session.add_all([acc1, acc2, acc3, acc4, acc5])
+        db.session.commit()
+
+    session['user_id'] = user.id
+    session['username'] = user.username
+
+    return jsonify({'success': True, 'redirect': url_for('attendance.attendance_view')})
 
 @auth_bp.route('/logout')
 def logout():
