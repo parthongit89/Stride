@@ -36,6 +36,26 @@ def get_expenses_data():
         }
     })
 
+@expenses_bp.route('/api/nill', methods=['POST'])
+@login_required
+def nill_expenses():
+    user_id = session['user_id']
+    
+    # 1. Delete all transactions for the unique user
+    ExpenseTransaction.query.filter_by(user_id=user_id).delete()
+    
+    # 2. Reset all bank account and cash balances to 0.00 for the unique user
+    accounts = BankAccount.query.filter_by(user_id=user_id).all()
+    for acc in accounts:
+        acc.balance = 0.00
+        
+    db.session.commit()
+    
+    return jsonify({
+        'success': True, 
+        'message': 'All transaction data has been nilled out and account balances reset to ₹0.00.'
+    })
+
 @expenses_bp.route('/api/accounts/add', methods=['POST'])
 @login_required
 def add_account():

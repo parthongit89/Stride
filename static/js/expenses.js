@@ -20,6 +20,24 @@ function loadExpensesData() {
         });
 }
 
+function confirmNillData() {
+    if (confirm("Are you sure you want to Nill out all payment data? All transaction history will vanish and account balances will be reset to ₹0.00.")) {
+        fetch('/expenses/api/nill', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                loadExpensesData();
+            } else {
+                alert(data.message || 'Failed to Nill payment data.');
+            }
+        })
+        .catch(err => console.error("Nill error:", err));
+    }
+}
+
 function togglePrivacy() {
     isMasked = !isMasked;
     const eyeBank = document.getElementById('eye-icon-bank');

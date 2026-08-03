@@ -57,6 +57,12 @@ def test_app():
         print("Accounts count:", len(exp_data.get('accounts')))
         print("Transactions count:", len(exp_data.get('transactions')))
 
+        # Test Nill Expenses endpoint
+        nill_res = client.post('/expenses/api/nill')
+        print("Nill expenses API status code:", nill_res.status_code)
+        assert nill_res.status_code == 200
+        assert nill_res.get_json().get('success') is True
+
         # Test Monthly report download
         report_res = client.get('/expenses/api/download-report?month=Aug2026')
         print("Monthly report download status code:", report_res.status_code)
